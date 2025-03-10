@@ -1,13 +1,27 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from tasks.forms import TaskForm, TaskModelForm
 from tasks.models import Employee, Task, TaskDetail, Project
 from datetime import date
 from django.db.models import Q, Count
+from django.contrib import messages
 
 
 def manager_dashboard(request):
-    return render(request, 'dashboard/manager-dashboard.html')
+    tasks = Task.objects.all()
+    total_tasks = tasks.count()
+    pending_tasks = tasks.filter(status='PENDING').count()
+    in_progress_tasks = tasks.filter(status='IN_PROGRESS').count()
+    completed_tasks = tasks.filter(status='COMPLETED').count()
+
+    context = {
+        'tasks': tasks,
+        'total_tasks': total_tasks,
+        'pending_tasks': pending_tasks,
+        'in_progress_tasks': in_progress_tasks,
+        'completed_tasks': completed_tasks
+    }
+    return render(request, 'dashboard/manager-dashboard.html', context)
 
 def user_dashboard(request):
     return render(request, 'dashboard/user-dashboard.html')
@@ -38,6 +52,14 @@ def create_task(request):
             
     context = {"form": form}
     return render(request, 'task_form.html', context)
+
+
+def delete_task(request, id):
+    if request.method == 'POST':
+        task = Task.objects.get(id=id)
+        task.delete()
+        messages.success(request,"Task deleted successfully")
+        return redirect("manager-dashboard")
 
 def view_task(request):
     
