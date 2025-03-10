@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from tasks.forms import TaskForm, TaskModelForm
-from tasks.models import Employee, Task
+from tasks.models import Employee, Task, TaskDetail, Project
+from datetime import date
+from django.db.models import Q, Count
 
 
 def manager_dashboard(request):
@@ -38,8 +40,8 @@ def create_task(request):
     return render(request, 'task_form.html', context)
 
 def view_task(request):
-    tasks = Task.objects.all()
     
-    task_3 = Task.objects.get(id=1)
-    return render(request, "show_task.html", {"tasks": tasks, "task3": task_3})
+    tasks_count = Project.objects.annotate(num_tasks=Count('task'))
+   
+    return render(request, "show_task.html", {"tasks_count": tasks_count})
 
