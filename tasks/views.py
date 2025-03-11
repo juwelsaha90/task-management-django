@@ -80,6 +80,9 @@ def delete_task(request, id):
         task.delete()
         messages.success(request,"Task deleted successfully")
         return redirect("manager-dashboard")
+    else:
+        messages.success(request,"Something went wrong")
+        return redirect("manager-dashboard")
 
 def update_task(request, id):
     task = Task.objects.get(id=id)

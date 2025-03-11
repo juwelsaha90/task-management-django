@@ -22,7 +22,11 @@
                     <span>
                         {{task.title}}
                     </span>
-                    <a href='{% url "update-task" task.id %}' class="px-2 py-1 bg-rose-500">Edit</a>
+                    <a href='{% url "update-task" task.id %}' class="px-2 py-1 bg-green-500">Edit</a>
+                    <form action="{% url 'delete-task' task.id %}" method="POST" class="inline">
+                        {% csrf_token %}
+                        <button typy="submit" class="px-2 py-1 bg-red-500">Delete</button>
+                    </form>
                 </div>
             </div>
             <div>
