@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from tasks.forms import TaskForm, TaskModelForm
+from tasks.forms import TaskForm, TaskModelForm, TaskDetailModelForm
 from tasks.models import Employee, Task, TaskDetail, Project
 from datetime import date
 from django.db.models import Q, Count
@@ -51,20 +51,26 @@ def test(request):
 
 def create_task(request):
     
-    form = TaskModelForm()
+    task_form = TaskModelForm()
+    task_detail_form = TaskDetailModelForm()
     
     if request.method == 'POST':
-        form = TaskModelForm(request.POST)
-        if form.is_valid():
+        task_form = TaskModelForm(request.POST)
+        task_detail_form = TaskDetailModelForm(request.POST)
+        if task_form.is_valid() and task_detail_form.is_valid():
             
             """ For django model form """
-            form.save()
-
-            return render(request, 'task_form.html', {'form': form, 'message': 'Task created successfully'})
+            task = task_form.save()
+            task_detail = task_detail_form.save(commit=False)
+            task_detail.task = task
+            task_detail.save()
+            
+            messages.success(request,"Task created successfully")
+            return redirect("create-task")
             """ For django form """
            
             
-    context = {"form": form}
+    context = {"task_form": task_form, "task_detail_form": task_detail_form}
     return render(request, 'task_form.html', context)
 
 
@@ -74,6 +80,34 @@ def delete_task(request, id):
         task.delete()
         messages.success(request,"Task deleted successfully")
         return redirect("manager-dashboard")
+
+def update_task(request, id):
+    task = Task.objects.get(id=id)
+    task_form = TaskModelForm(instance=task)
+
+    if task.details:
+        task_detail_form = TaskDetailModelForm(instance=task.details)
+    
+    
+    if request.method == 'POST':
+        task_form = TaskModelForm(request.POST, instance=task)
+        task_detail_form = TaskDetailModelForm(request.POST, instance=task.details)
+        if task_form.is_valid() and task_detail_form.is_valid():
+            
+            """ For django model form """
+            task = task_form.save()
+            task_detail = task_detail_form.save(commit=False)
+            task_detail.task = task
+            task_detail.save()
+            
+            
+            messages.success(request,"Task updated successfully")
+            return redirect("update-task", id )
+            """ For django form """
+           
+            
+    context = {"task_form": task_form, "task_detail_form": task_detail_form}
+    return render(request, 'task_form.html', context)
 
 def view_task(request):
     

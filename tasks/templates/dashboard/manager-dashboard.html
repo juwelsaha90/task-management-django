@@ -22,9 +22,7 @@
                     <span>
                         {{task.title}}
                     </span>
-                    <span>
-                        {{task.status}}
-                    </span>
+                    <a href='{% url "update-task" task.id %}' class="px-2 py-1 bg-rose-500">Edit</a>
                 </div>
             </div>
             <div>
