@@ -31,6 +31,7 @@
             <!-- Stats grid  -->
             <div class="grid grid-cols-4 gap-6 mb-8">
                 <!-- Total task  -->
+                <a href="{% url 'manager-dashboard' %}">
                 <div class="bg-white  rounded-xl p-6 shadow-sm">
                     <h3 class="text-sm font-medium text-gray-500 mb-4">TOTAL TASK </h3>
                     <div class="flex justify-between items-start">
@@ -48,7 +49,9 @@
                         </div>
                     </div>
                 </div>
+                </a>
                 <!-- completed task  -->
+                 <a href="{% url 'manager-dashboard' %}?type=completed">
                 <div class="bg-white  rounded-xl p-6 shadow-sm">
                     <h3 class="text-sm font-medium text-gray-500 mb-4">COMPLETED TASK</h3>
                     <div class="flex justify-between items-start">
@@ -66,7 +69,9 @@
                         </div>
                     </div>
                 </div>
+                </a>
                 <!-- task in progress  -->
+                <a href="{% url 'manager-dashboard' %}?type=in_progress">
                 <div class="bg-white  rounded-xl p-6 shadow-sm">
                     <h3 class="text-sm font-medium text-gray-500 mb-4">TASK IN PROGRESS</h3>
                     <div class="flex justify-between items-start">
@@ -84,7 +89,9 @@
                         </div>
                     </div>
                 </div>
+                </a>
                 <!-- to does  -->
+                <a href="{% url 'manager-dashboard' %}?type=pending">
                 <div class="bg-white  rounded-xl p-6 shadow-sm">
                     <h3 class="text-sm font-medium text-gray-500 mb-4">TODOES</h3>
                     <div class="flex justify-between items-start">
@@ -102,6 +109,7 @@
                         </div>
                     </div>
                 </div>
+                </a>
             </div>
 
           {% block tasks %}

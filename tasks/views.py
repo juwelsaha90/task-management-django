@@ -8,11 +8,9 @@ from django.contrib import messages
 
 
 def manager_dashboard(request):
-    tasks = Task.objects.select_related("details").prefetch_related("assigned_to").all()
-    # total_tasks = tasks.count()
-    # pending_tasks = tasks.filter(status='PENDING').count()
-    # in_progress_tasks = tasks.filter(status='IN_PROGRESS').count()
-    # completed_tasks = tasks.filter(status='COMPLETED').count()
+    type = request.GET.get('type','all')
+    
+   
 
     counts = Task.objects.aggregate(
         total=Count('id'),
@@ -20,6 +18,18 @@ def manager_dashboard(request):
         in_progress=Count('id', filter=Q(status='IN_PROGRESS')),
         completed=Count('id', filter=Q(status='COMPLETED'))
     )
+
+    base_query = Task.objects.select_related("details").prefetch_related("assigned_to")
+    if type == 'pending':
+        tasks = base_query.filter(status='PENDING')
+    elif type == 'in_progress':
+        tasks = base_query.filter(status='IN_PROGRESS')
+    elif type == 'completed':
+        tasks = base_query.filter(status='COMPLETED')
+    else:
+        tasks = base_query.all()
+
+
 
     context = {
         'tasks': tasks,
