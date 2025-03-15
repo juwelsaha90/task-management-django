@@ -14,6 +14,10 @@ class TaskForm(forms.Form):
         self.fields['assigned_to'].choices = [(emp.id, emp.name) for emp in employees]
 
 class StyleFormMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apply_styled_widgets()
+
     default_classes = "border-2 border-gray-300 w-full rounded-lg shadow-sm hover:border-blue-500 p-2"
     
     def apply_styled_widgets(self):
@@ -50,9 +54,7 @@ class TaskModelForm(StyleFormMixin, forms.ModelForm):
         # }
     
     """ Using Mixin for Widget Styling """
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.apply_styled_widgets()
+    
 
 
 class TaskDetailModelForm(StyleFormMixin,forms.ModelForm):
@@ -60,6 +62,4 @@ class TaskDetailModelForm(StyleFormMixin,forms.ModelForm):
         model = TaskDetail
         fields = [ 'priority', 'notes']
     
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.apply_styled_widgets()
+    
