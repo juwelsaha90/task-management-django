@@ -7,6 +7,7 @@ from django.db.models import Q, Count
 from django.contrib import messages
 
 
+
 def manager_dashboard(request):
     type = request.GET.get('type','all')
     
